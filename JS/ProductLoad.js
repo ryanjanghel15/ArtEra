@@ -49,6 +49,8 @@ fetch(API_URL)
                             data-product-name="${product.Name}"
                             data-product-description="${product.Description}"
                             data-product-price="${product.Price}"
+                            data-product-dataneed="${product.Data}"
+
                         >
                             View Product
                         </a>
@@ -81,7 +83,8 @@ fetch(API_URL)
                 window.localStorage.setItem('ProductImage',e.target.dataset.productImage);
                 window.localStorage.setItem('ProductDescription',e.target.dataset.productDescription);
                 window.localStorage.setItem('ProductPrice',e.target.dataset.productPrice);
-                console.log(window.localStorage.getItem('ProductName'));
+                window.localStorage.setItem('ProductDataNeed',e.target.dataset.productDataneed);
+                //console.log(window.localStorage.getItem('ProductDataNeed'));
                 window.location.href = "/HTML/CashOut.html"
             });
 

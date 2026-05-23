@@ -1,6 +1,6 @@
 .formcontainere {
     background-color: white;
-    height: 100vh;
+    min-height: 100vh;
     width: 80%;
     margin-left: auto;
     margin-right: auto;
@@ -26,6 +26,22 @@ hr{
 }
 .title_wraper{
     display: block;
+}
+#product-name{
+    font-size: 40px;
+}
+#product-display{
+      display: flex;
+  justify-content: space-between;
+    width:100%;
+}
+#product-price{
+    font-size: 30px;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+#product-price::before {
+  content: "\20B9";
 }
 @keyframes loadHr {
     from{
