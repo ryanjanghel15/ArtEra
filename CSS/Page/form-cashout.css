@@ -1,0 +1,38 @@
+.formcontainere {
+    background-color: white;
+    height: 100vh;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 10px;
+    text-align: center;
+}
+.sidecol_wrapper{
+    text-align: start;
+        padding:20px;
+}
+.CursorText {
+    border-right: 10px solid black;
+    display: inline-block;
+    background-color: white;
+    animation: Cursor 0.5s infinite both;
+}
+hr{
+    width: 80%;
+    margin: auto;
+    animation: loadHr 3s cubic-bezier(0.18, 0.63, 0.71, 0.66) forwards;
+}
+.title_wraper{
+    display: block;
+}
+@keyframes loadHr {
+    from{
+        width: 0%;
+    }
+    to{
+        width: 80%;
+    }
+    
+}

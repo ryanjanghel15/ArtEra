@@ -1,0 +1,22 @@
+.CursorText {
+    border-right: 10px solid black;
+    display: inline-block;
+    background-color: white;
+    min-height: 40px; /* adjust based on text length */
+    animation: Cursor 0.5s infinite both;
+}
+
+@keyframes Cursor {
+    0% {
+        border-right-color: black;
+    }
+
+    50% {
+        border-right-color: transparent;
+    }
+
+    100% {
+        border-right-color: black;
+
+    }
+}

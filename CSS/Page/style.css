@@ -1,0 +1,27 @@
+Body {
+    font-family: "CroissantOne";
+}
+h1.title{
+    font-size: 100px;
+}
+@font-face {
+    font-family: "CroissantOne";
+    src: url(/Media/Font/CroissantOne/CroissantOne-Regular.ttf);
+}
+.test{
+    background-color: aqua;
+}
+svg{
+    background-color: azure;
+}
+.navbar_main{
+    min-height: 20px;
+}
+.navbar_main .navbar-brand img {
+    scale: 1.5;
+}
+@media screen and (max-width: 425px) {
+    .navbar_main .nav-link {
+        font-size: 12px;
+    }
+}
