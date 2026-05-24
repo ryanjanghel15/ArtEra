@@ -17,6 +17,11 @@ svg{
 .navbar_main .navbar-brand img {
     scale: 1.5;
 }
+.navbar-text ion-icon {
+   font-size: 15px;
+   margin-left: 5px;
+
+}
 @media screen and (max-width: 425px) {
     .navbar_main .nav-link {
         font-size: 12px;

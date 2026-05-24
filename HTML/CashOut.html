@@ -26,15 +26,30 @@
             <img class="img_display img-thumbnail" src="/Media/Photos/Icons/cube-outline.png">
             <div class="title_wraper">
               <div id="product-display"></div>
-              <H5  id="product-description">Lorem ipsum dolor sit amet consectetur adipisicing elit.</H5>
+              <H5 id="product-description">Lorem ipsum dolor sit amet consectetur adipisicing elit.</H5>
             </div>
           </div>
         </div>
         <div class="col-lg-6 col-md-12">
-          Hello
+          <div class="container">
+
+            <input type="text" name="name" placeholder="Enter Name"><br>
+
+            <input type="text" name="address" placeholder="Enter Address"><br>
+
+            <input type="tel" name="phone" placeholder="Enter Phone"><br>
+
+            <button onclick="sendData()">
+              Order Now
+            </button>
+
+            <p id="status"></p>
+
+          </div>
+
         </div>
         <div class="col-12">
-            <hr>
+          <hr>
         </div>
         <div class="col-6">
 
@@ -54,8 +69,9 @@
   <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
   <!-- Other JS -->
-   <script src="/JS/CursorText.js"></script>
-   <script src="/JS/CashOutProductLoad.js" ></script>
+  <script src="/JS/CursorText.js"></script>
+  <script src="/JS/CashOutProductLoad.js"></script>
+  <script src="/JS/SendRequest.js"></script>
 </body>
 
 </html>
