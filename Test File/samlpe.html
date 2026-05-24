@@ -1,134 +1,360 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Form with Bootstrap</title>
-    <link
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.all.min.js"></script>
-    <style>
-      .form-container {
-        max-width: 500px;
-        margin: auto;
-        margin-top: 50px;
-        padding: 20px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        background-color: #fff;
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dynamic Form</title>
+  <style>
+    :root {
+      --bg: #f5f4f0;
+      --surface: #ffffff;
+      --border: #e2e0d8;
+      --border-focus: #a0998a;
+      --text: #1a1917;
+      --text-muted: #6b6860;
+      --accent: #2a2724;
+      --accent-fg: #ffffff;
+      --success-bg: #eaf3de;
+      --success-text: #3b6d11;
+      --error-bg: #fcebeb;
+      --error-text: #a32d2d;
+      --radius: 10px;
+      --font: 'DM Sans', sans-serif;
+      --font-mono: 'DM Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+
+    /* ── Card ──────────────────────────────────────────────── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2.5rem 2rem;
+      width: 100%;
+      max-width: 520px;
+    }
+
+    .card-header {
+      margin-bottom: 2rem;
+    }
+
+    .card-header h1 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+
+    .card-header p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* ── Form fields ───────────────────────────────────────── */
+    #form-fields {
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      animation: fadeSlide 0.25s ease forwards;
+      opacity: 0;
+    }
+
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .field-group label {
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .field-group input {
+      font-family: var(--font);
+      font-size: 0.95rem;
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.6rem 0.85rem;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      width: 100%;
+    }
+
+    .field-group input:focus {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px rgba(42,39,36,0.07);
+    }
+
+    .field-group input.error {
+      border-color: #e24b4a;
+      background: #fff8f8;
+    }
+
+    /* ── Submit button ─────────────────────────────────────── */
+    #submit-btn {
+      margin-top: 1.75rem;
+      width: 100%;
+      padding: 0.75rem;
+      background: var(--accent);
+      color: var(--accent-fg);
+      font-family: var(--font);
+      font-size: 0.95rem;
+      font-weight: 500;
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: opacity 0.15s, transform 0.1s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    #submit-btn:hover { opacity: 0.87; }
+    #submit-btn:active { transform: scale(0.985); }
+    #submit-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    /* ── Status banner ─────────────────────────────────────── */
+    #status {
+      display: none;
+      margin-top: 1rem;
+      padding: 0.65rem 0.9rem;
+      border-radius: var(--radius);
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    #status.success { display: block; background: var(--success-bg); color: var(--success-text); }
+    #status.error   { display: block; background: var(--error-bg);   color: var(--error-text); }
+
+    /* ── Skeleton loader ───────────────────────────────────── */
+    .skeleton {
+      height: 52px;
+      background: linear-gradient(90deg, #ece9e3 25%, #e2dfd8 50%, #ece9e3 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s infinite;
+      border-radius: var(--radius);
+    }
+
+    @keyframes shimmer {
+      from { background-position: 200% 0; }
+      to   { background-position: -200% 0; }
+    }
+
+    /* ── Spinner ───────────────────────────────────────────── */
+    .spinner {
+      width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,0.35);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+<div class="card">
+  <div class="card-header">
+    <h1>Submit your data</h1>
+    <p id="subtitle">Loading fields from spreadsheet…</p>
+  </div>
+
+  <div id="form-fields">
+    <!-- Skeleton placeholders while headers load -->
+    <div class="skeleton"></div>
+    <div class="skeleton"></div>
+    <div class="skeleton"></div>
+  </div>
+
+  <button id="submit-btn" disabled>Send to spreadsheet</button>
+  <div id="status"></div>
+</div>
+
+<script>
+  // ╔══════════════════════════════════════════════════════╗
+  //  CONFIG — paste your deployed Apps Script URL here
+  // ╚══════════════════════════════════════════════════════╝
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxZpqcdEzeSepuwXstm8Su2P-Kw8wDZAMfSeD9QJxQ8y8s9KxIarPy2AYbaGCVU1bZS/exec";
+
+  // ── State ──────────────────────────────────────────────
+  const sendData = {};       // holds { fieldName: value, ... }
+  let   headers  = [];       // column names from row 1
+
+  // ── DOM refs ───────────────────────────────────────────
+  const formFields  = document.getElementById("form-fields");
+  const submitBtn   = document.getElementById("submit-btn");
+  const statusEl    = document.getElementById("status");
+  const subtitleEl  = document.getElementById("subtitle");
+
+  // ── 1. Fetch headers on page load ──────────────────────
+  async function loadHeaders() {
+    try {
+      const res  = await fetch(`${APPS_SCRIPT_URL}?action=getHeaders`);
+      const json = await res.json();
+
+      if (!json.success) throw new Error(json.error);
+
+      headers = json.headers; //What Request Im Asking (Taged By Ryan 🫡)
+      console.log(headers);
+      buildForm(headers);
+      subtitleEl.textContent = `${headers.length} field${headers.length !== 1 ? "s" : ""} loaded from spreadsheet`;
+      submitBtn.disabled = false;
+
+    } catch (err) {
+      formFields.innerHTML = "";
+      subtitleEl.textContent = "Could not load spreadsheet fields.";
+      showStatus("error", "Failed to connect: " + err.message);
+      console.error("[loadHeaders]", err);
+    }
+  }
+
+  // ── 2. Build form dynamically from headers ─────────────
+  function buildForm(headers) {
+    formFields.innerHTML = "";
+
+    headers.forEach((key, i) => {
+      // Initialise sendData property
+      sendData[key] = "";
+
+      // Detect input type from header hint (e.g. "email:email", "date:date")
+      let label = key;
+      let type  = "text";
+
+      if (key.includes(":")) {
+        const parts = key.split(":");
+        label = parts[0].trim();
+        type  = parts[1].trim();
       }
-    </style>
-  </head>
-  <body class="bg-light">
-    <div class="container">
-      <div class="form-container">
-        <h4 class="text-center mb-4">Form Submission to Google Sheet</h4>
-        <form id="submit-to-google-sheet">
-          <div class="form-group">
-            <label for="name">Name:</label>
-            <input
-              class="form-control"
-              type="text"
-              name="name"
-              id="name"
-              placeholder="Name"
-              required
-            />
-          </div>
-          <div class="form-group">
-            <label for="email">Email:</label>
-            <input
-              class="form-control"
-              type="email"
-              name="email"
-              id="email"
-              placeholder="Email"
-              required
-            />
-          </div>
-          <div class="form-group">
-            <label for="slip">Contact Number:</label>
-            <input
-              class="form-control"
-              type="text"
-              name="contact_number"
-              id="contact_number"
-              placeholder="Contact Number"
-              required
-            />
-          </div>
 
-          <div class="form-group">
-            <label for="loc">Gender:</label>
-            <select class="form-control" name="gender" id="gender" required>
-              <option value="" disabled selected hidden>Choose...</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="loc">Message:</label>
-            <textarea
-              class="form-control"
-              name="message"
-              id="message"
-              placeholder="Message"
-              required
-            ></textarea>
-          <div class="form-group form-check mt-2">
-            <input class="form-check-input" type="checkbox" id="age" />
-            <label class="form-check-label" for="age"
-              >Check if you are over 18 years old</label
-            >
-          </div>
-          <div class="form-group form-check">
-            <input class="form-check-input" type="checkbox" id="ex" required />
-            <label class="form-check-label" for="ex"
-              >By checking this box I certify that I am agree with the data
-              terms and policies.
-            </label>
-          </div>
-          <button type="submit" class="btn btn-primary btn-block">
-            Submit
-          </button>
-        </form>
-      </div>
-    </div>
+      const group = document.createElement("div");
+      group.className = "field-group";
+      group.style.animationDelay = `${i * 40}ms`;
 
-    <script>
-      const scriptURL =                       
-      "https://script.google.com/macros/s/AKfycbx_upXefIBovgdNrV00iZTzJ3-RXhVhoU9KmNziJO5EMfHNKBv_ywEW5acERG1_UnmJ/exec";
-      const form = document.forms["submit-to-google-sheet"];
-      form.addEventListener("submit", (e) => {
-        e.preventDefault();
-        var formData = new FormData(form);
-        var ex = document.getElementById("ex").checked;
-        var age = document.getElementById("age").checked;
+      const lbl   = document.createElement("label");
+      lbl.setAttribute("for", `field-${key}`);
+      lbl.textContent = label;
 
-        if (age) {
-          formData.append("age", "Yes");
-        } else {
-          formData.append("age", "No");
-        }
-        if (ex) {
-          formData.append("ex", "Yes");
-        } else {
-          formData.append("ex", "No");
-        }
-        console.log(formData.ex);
-        
-        fetch(scriptURL, { method: "POST", body: formData })
-          .then((response) => {
-            swal("Done", "Submitted Successfully.", "success");
-          })
-          .catch((error) => {
-            swal("Error", "Something went wrong. please try again!", "error");
-          });
+      const input = document.createElement("input");
+      input.id    = `field-${key}`;
+      input.type  = type;
+      input.placeholder = label;
+      input.dataset.key = key;
+
+      // Keep sendData in sync
+      input.addEventListener("input", () => {
+        sendData[key] = input.value.trim();
+        input.classList.remove("error");
       });
-    </script>
-  </body>
+
+      group.appendChild(lbl);
+      group.appendChild(input);
+      formFields.appendChild(group);
+    });
+  }
+
+  // ── 3. Validate ────────────────────────────────────────
+  function validate() {
+    const missing = headers.filter(key => !sendData[key] || sendData[key] === "");
+
+    if (missing.length > 0) {
+      missing.forEach(key => {
+        const input = document.querySelector(`[data-key="${key}"]`);
+        if (input) input.classList.add("error");
+        console.error(`[validation] Missing required field: "${key}"`);
+      });
+      showStatus("error", `Please fill in: ${missing.join(", ")}`);
+      return false;
+    }
+
+    return true;
+  }
+
+  // ── 4. Send data to spreadsheet ────────────────────────
+  async function sendDataToTb() {
+    if (!validate()) return;
+
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = `<span class="spinner"></span> Sending…`;
+    clearStatus();
+
+    try {
+      const res  = await fetch(APPS_SCRIPT_URL, {
+        method:  "POST",
+        headers: { "Content-Type": "text/plain" }, // Apps Script requires text/plain for doPost
+        body: JSON.stringify({ action: "appendRow", data: { ...sendData } })
+      });
+
+      const json = await res.json();
+
+      if (!json.success) throw new Error(json.error);
+
+      showStatus("success", "✓ Data sent to spreadsheet successfully.");
+      resetForm();
+      console.log("[sendDataToTb] Success:", sendData);
+
+    } catch (err) {
+      showStatus("error", "Send failed: " + err.message);
+      console.error("[sendDataToTb]", err);
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = "Send to spreadsheet";
+    }
+  }
+
+  // ── Helpers ────────────────────────────────────────────
+  function resetForm() {
+    headers.forEach(key => {
+      sendData[key] = "";
+      const input = document.querySelector(`[data-key="${key}"]`);
+      if (input) { input.value = ""; input.classList.remove("error"); }
+    });
+  }
+
+  function showStatus(type, msg) {
+    statusEl.className  = type;
+    statusEl.textContent = msg;
+  }
+
+  function clearStatus() {
+    statusEl.className  = "";
+    statusEl.textContent = "";
+    statusEl.style.display = "none";
+  }
+
+  // ── Wire submit button ─────────────────────────────────
+  submitBtn.addEventListener("click", sendDataToTb);
+
+  // ── Kick off ───────────────────────────────────────────
+  loadHeaders();
+</script>
+</body>
 </html>

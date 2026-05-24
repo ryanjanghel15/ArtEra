@@ -79,6 +79,7 @@ fetch(API_URL)
             a.addEventListener('click', (e) => {
 
                 e.preventDefault();
+                window.localStorage.setItem('ProductID',e.target.dataset.productId);
                 window.localStorage.setItem('ProductName',e.target.dataset.productName);
                 window.localStorage.setItem('ProductImage',e.target.dataset.productImage);
                 window.localStorage.setItem('ProductDescription',e.target.dataset.productDescription);

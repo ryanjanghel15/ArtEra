@@ -30,22 +30,8 @@
             </div>
           </div>
         </div>
-        <div class="col-lg-6 col-md-12">
-          <div class="container">
-
-            <input type="text" name="name" placeholder="Enter Name"><br>
-
-            <input type="text" name="address" placeholder="Enter Address"><br>
-
-            <input type="tel" name="phone" placeholder="Enter Phone"><br>
-
-            <button onclick="sendData()">
-              Order Now
-            </button>
-
-            <p id="status"></p>
-
-          </div>
+        <div class="col-lg-6 col-md-12 payslot">
+          
 
         </div>
         <div class="col-12">
@@ -56,6 +42,21 @@
         </div>
         <div class="col-6">
           s
+        </div>
+        <div class="col-12 userdataslot">
+          <div class="container">
+
+              <div class="card-header">
+                <h1>Your Shiping Information</h1>
+              <div id="form-fields">
+                <div class="skeleton"></div>
+              </div>
+
+              <button id="submit-btn" type="button" disabled class="btn btn-outline-success"><span class="spinner"><ion-icon name="sparkles-outline"></ion-icon></span> Processing…</button>
+              <div id="status"></div>
+            </div>
+
+          </div>
         </div>
       </div>
     </div>
