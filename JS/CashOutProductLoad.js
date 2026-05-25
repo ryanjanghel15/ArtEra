@@ -36,7 +36,7 @@ async function loadHeaders() {
 
     } catch (err) {
         formFields.innerHTML = "";
-        showStatus("text-danger", "Failed to connect: " + err.message +" Report This Error To +91 8806664816 or 9009320505");
+        showStatus("text-danger", "Failed to connect: " + err.message + " Report This Error To +91 8806664816 or 9009320505");
         console.error("[loadHeaders]", err);
         submitBtn.innerHTML = "Error";
         submitBtn.classList.remove("btn-outline-success");
@@ -55,7 +55,7 @@ function buildForm(headers) {
         if (key.startsWith("_")) {
             const localKey = key.replace("_", "");
             requestData[key] = window.localStorage.getItem(localKey) || "";
-            return; // don't build an input for this field
+            return;
         }
 
         // Initialise requestData property (user-filled fields only)
@@ -88,9 +88,11 @@ function buildForm(headers) {
             input.classList.remove("error");
         });
         group.appendChild(input);
+        input.className = "field-name";
         formFields.appendChild(group);
         submitBtn.innerHTML = btnTextContent;
     });
+
 }
 
 // ── 3. Validate ────────────────────────────────────────
@@ -107,7 +109,10 @@ function validate() {
             if (input) input.classList.add("error");
             console.error(`[validation] Missing required field: "${key}"`);
         });
-        showStatus("error", `Please fill in: ${missing.join(", ")}`);
+        showStatus("text-warning", `Please fill in: ${missing.join(", ")}`);
+        submitBtn.classList.remove('btn-outline-success');
+        submitBtn.classList.add('btn-warning');
+        submitBtn.innerHTML = `<ion-icon class="spinner" name="reload-outline"></ion-icon>Retry`;
         return false;
     }
 
@@ -143,6 +148,10 @@ async function requestDataToTb() {
     } finally {
         submitBtn.disabled = false;
         submitBtn.innerHTML = btnTextContent;
+        submitBtn.classList.remove('btn-warning');
+        submitBtn.classList.remove('btn-danger');
+        submitBtn.classList.add('btn-outline-success');
+
     }
 }
 

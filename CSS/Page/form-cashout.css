@@ -59,26 +59,24 @@ hr {
 #form-fields {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    row-gap: 5px;
+    column-gap: 5px;
 }
 .field-group{
-    margin: 10px;
-    min-width: 10px;
 }
-
+.field-name{
+    max-width: 100px;
+}
 .spinner {
     width: 16px;
     height: 16px;
     border: 2px solid rgba(255, 255, 255, 0.35);
     border-top-color: #fff;
     border-radius: 50%;
-    animation: spin 0.7s linear infinite;
 }
 
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
-}
 
 @keyframes loadHr {
     from {
@@ -94,13 +92,14 @@ hr {
 .skeleton {
     height: 52px;
     width: 100%;
-    background: linear-gradient(90deg, #ffd683 25%, #fff0cc 50%, #b87a00 75%);
+    background: linear-gradient(90deg, #ffffff 25%, #fff0cc 50%, #ffaa00 75%);
     background-size: 200% 100%;
     animation: shimmer 1.4s infinite;
     border-radius: 8px; 
 }
 #submit-btn{
     margin: 10px;
+    font-size: 20px;
 }
 @keyframes shimmer {
     from {
