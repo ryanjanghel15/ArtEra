@@ -2,10 +2,26 @@ let btnTextContent = "Place Order";
 const ProductDisplay = document.querySelector("#product-display");
 const ProductDescription = document.querySelector("#product-description");
 const ProductPrice = document.querySelector("#display-price");
+const ProductImgDisplay = document.getElementById('img_display');
 let DataRequirements = window.localStorage.getItem('ProductDataNeed');
+console.log(DataRequirements);
+
+class ProductData {
+    constructor(data){
+        this.RawData = data
+        this.DataSet = this.RawData.split(";")
+    }
+    Debug(){
+        console.log(this.DataSet);
+    }
+}
+NewProductData = new ProductData(DataRequirements);
+
+NewProductData.Debug();
 
 ProductDisplay.innerHTML = `<span id="product-name">${window.localStorage.getItem('ProductName')}</span>  <span id="product-price">${window.localStorage.getItem('ProductPrice')}</span>`
 ProductDescription.textContent = window.localStorage.getItem('ProductDescription');
+ProductImgDisplay.src = window.localStorage.getItem('ProductImage');
 console.log(window.localStorage.getItem('ProductPrice'));
 // ╔══════════════════════════════════════════════════════╗
 //  CONFIG — paste your deployed Apps Script URL here

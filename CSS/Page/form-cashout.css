@@ -76,8 +76,13 @@ hr {
     border-top-color: #fff;
     border-radius: 50%;
 }
-
-
+.img_wapper{
+    display: flex;
+    justify-content: center;
+}
+#img_display{
+    height: 70%;
+}
 @keyframes loadHr {
     from {
         width: 0%;
