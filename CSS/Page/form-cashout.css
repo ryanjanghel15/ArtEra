@@ -30,6 +30,7 @@ hr {
 
 .title_wraper {
     display: block;
+    text-align: start;
 }
 
 #product-name {
@@ -56,6 +57,19 @@ hr {
     display: flex;
     align-items: center;
 }
+.payBlock{
+    width: 100%;
+    font-size: 20px;
+}
+.payBlock input{
+    width: 30%;
+    margin: 5px;
+}
+.PaymentQrCode{
+    width: 40%;
+    margin-left: auto;
+    margin-right: auto;
+}
 #form-fields {
     display: flex;
     flex-direction: row;
@@ -63,8 +77,6 @@ hr {
     justify-content: center;
     row-gap: 5px;
     column-gap: 5px;
-}
-.field-group{
 }
 .field-name{
     max-width: 100px;
@@ -93,7 +105,13 @@ hr {
     }
 
 }
-
+.selectslot_wrappper{
+    padding-top: 50px;
+    font-size: 20px;
+    display: flex;
+    row-gap: 50px;
+    flex-direction: column;
+}
 .skeleton {
     height: 52px;
     width: 100%;

@@ -4,15 +4,55 @@ const ProductDescription = document.querySelector("#product-description");
 const ProductPrice = document.querySelector("#display-price");
 const ProductImgDisplay = document.getElementById('img_display');
 let DataRequirements = window.localStorage.getItem('ProductDataNeed');
+const selectionslotEl = document.getElementById('selectslot');
+const payBlockArea = document.querySelector(".payBlock");
+const PaymentBtnEl = document.getElementById("PaymentBtn");
+const TransactionIDInEl = document.getElementById('TransactionIDIn');
+let paymentClaim = false;
 console.log(DataRequirements);
 
-class ProductData {
-    constructor(data){
-        this.RawData = data
-        this.DataSet = this.RawData.split(";")
+PaymentBtnEl.addEventListener('click', () => {
+    if (TransactionIDInEl.value.length == 12) {
+        window.localStorage.setItem('TransactID', TransactionIDInEl.value);
+        paymentClaim = true;
+        clearStatus();
+        buildForm(headers);
     }
-    Debug(){
-        console.log(this.DataSet);
+    else {
+        showStatus("text-danger", "Your Transaction ID seems Wrong, Please Check...");
+    }
+
+});
+
+
+class ProductData {
+    constructor(data) {
+        this.RawData = data;
+        this.DataSet = this.RawData.split(";");
+
+        // ['amount', 'size']
+        this.DataArguments = this.DataSet.map(ds => ds.split(':')[0].trim());
+
+        // ['1,2,3,4', '1l,2l,5l']
+        this.DataValues = this.DataSet.map(ds => ds.split(':')[1].trim());
+
+        // { amount: ['1','2','3','4'], size: ['1l','2l','5l'] }
+        this.Parsed = {};
+        this.DataArguments.forEach((arg, i) => {
+            this.Parsed[arg] = this.DataValues[i].split(',').map(v => v.trim());
+        });
+    }
+
+    // Call this after user picks options, pass in their selections
+    selections = { amount: '2', size: '2l' }
+    fillData(selections) {
+        return this.DataArguments.map(arg => `${arg}:${selections[arg]}`).join(';');
+    }
+
+    Debug() {
+        console.log("DataArguments:", this.DataArguments);
+        console.log("DataValues:", this.DataValues);
+        console.log("Parsed:", this.Parsed);
     }
 }
 NewProductData = new ProductData(DataRequirements);
@@ -47,7 +87,6 @@ async function loadHeaders() {
 
         headers = json.headers; //What Request Im Asking (Taged By Ryan 🫡)
         console.log(headers);
-        buildForm(headers);
         submitBtn.disabled = false;
 
     } catch (err) {
@@ -63,7 +102,7 @@ async function loadHeaders() {
 // ── 2. Build form dynamically from headers ─────────────
 function buildForm(headers) {
 
-
+    selectionslotEl.innerHTML = "";
     formFields.innerHTML = "";
 
     headers.forEach((key, i) => {
@@ -87,8 +126,8 @@ function buildForm(headers) {
             label = parts[0].trim();
             type = parts[1].trim();
         }
-
         const group = document.createElement("span");
+
         group.className = "field-group";
         group.style.animationDelay = `${i * 40}ms`;
 
@@ -108,7 +147,15 @@ function buildForm(headers) {
         formFields.appendChild(group);
         submitBtn.innerHTML = btnTextContent;
     });
-
+    NewProductData.DataArguments.forEach((da) => {
+        const options = NewProductData.Parsed[da].map(v => `<option value="${v}">${v}</option>`).join('');
+        selectionslotEl.innerHTML += ` <label>${da}:</label> <select name="${da}" id="${da}El">${options}</select>`;
+    });
+    payBlockArea.style.display = 'none'
+    const heading = document.createElement("h1");
+    heading.classList.add('card-header');
+    heading.textContent = "Your Shipping Information";
+    formFields.prepend(heading);
 }
 
 // ── 3. Validate ────────────────────────────────────────
@@ -131,12 +178,24 @@ function validate() {
         submitBtn.innerHTML = `<ion-icon class="spinner" name="reload-outline"></ion-icon>Retry`;
         return false;
     }
+    if (paymentClaim == false) {
+        showStatus("text-warning", `Please fill in: You Haven't Given Your Transaction ID`);
+        submitBtn.classList.remove('btn-outline-success');
+        submitBtn.classList.add('btn-warning');
+        submitBtn.innerHTML = `<ion-icon class="spinner" name="reload-outline"></ion-icon>Retry`;
+        return false;
+    }
 
     return true;
 }
 
 // ── 4. Send data to spreadsheet ────────────────────────
 async function requestDataToTb() {
+    headers.filter(key => key.startsWith("_")).forEach(key => {
+        const localKey = key.replace("_", "");
+        requestData[key] = window.localStorage.getItem(localKey) || "";
+    });
+
     if (!validate()) return;
     submitBtn.disabled = true;
     submitBtn.innerHTML = `<span class="spinner"><ion-icon name="sparkles-outline"></ion-icon></span> Processing…`;

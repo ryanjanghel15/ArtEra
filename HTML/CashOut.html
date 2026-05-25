@@ -3,10 +3,10 @@
 
 <head>
   <script>
-    if (window.localStorage.getItem('ProductName') == "") {
+    if (window.localStorage.getItem('ProductName') == null) {
       window.alert("Opps! You Have Came To the Wrong Place. Redrecting To Homepage");
       window.location.href = '/index.html'
-      document.querySelector('body').style.display = none;
+      document.querySelector('body').style.display = "none";
     }
   </script>
   <meta charset="utf-8">
@@ -28,48 +28,54 @@
   <div class="container">
     <div class="formcontainere shadow-lg">
       <div class="row">
-        <div class="col-lg-6 col-md-12">
+        <div class="col-lg-4 col-md-12">
           <div class="sidecol_wrapper">
             <div class="img_wapper">
               <img id="img_display" class="img_display img-thumbnail" src="/Media/Photos/Icons/cube-outline.png">
             </div>
-            <div class="title_wraper">
-              <div id="product-display"></div>
-              <H5 id="product-description">Lorem ipsum dolor sit amet consectetur adipisicing elit.</H5>
-            </div>
           </div>
         </div>
-        <div class="col-lg-6 col-md-12 payslot">
+        <div class="col-lg-7 col-md-12 selectslot_wrappper">
+          <div class="title_wraper">
+            <div id="product-display"></div>
+            <H5 id="product-description">Lorem ipsum dolor sit amet consectetur adipisicing elit.</H5>
+          </div>
+          <div id="selectslot" class="selectslot"></div>
+      </div>
+            <div class="col-12">
+        <hr>
+      </div>
+      <div class="col-6">
 
-
+      </div>
+      <div class="col-6">
+        s
+      </div>
+      <div class="col-12">
+        <div class="payBlock">
+          <img class="PaymentQrCode" src="/Media/Photos/Icons/Qr Icon.jpg"><br>
+          <lable>This is a Universal QR Code. Please Pay The Right Prise and Enter the Right Transaction ID</lable><br>
+          <input id="TransactionIDIn" placeholder="Enter Transaction ID" type="number" min="000000000000" max="999999999999">
+          <br>
+          <button id="PaymentBtn" type="button" class="btn btn-outline-success">Claim Payment</button>
         </div>
-        <div class="col-12">
-          <hr>
-        </div>
-        <div class="col-6">
+      </div>
+      <div class="col-12 userdataslot">
+        <div class="container">
 
-        </div>
-        <div class="col-6">
-          s
-        </div>
-        <div class="col-12 userdataslot">
-          <div class="container">
-
-            <div class="card-header">
-              <h1>Your Shiping Information</h1>
-              <div id="form-fields">
-                <div class="skeleton"></div>
-              </div>
-
-              <button id="submit-btn" type="button" disabled class="btn btn-outline-success"><span
-                  class="spinner"><ion-icon name="sparkles-outline"></ion-icon></span> Processing…</button>
-              <div id="status"></div>
+          <div class="card-header">
+            <div id="form-fields">
             </div>
 
+            <button id="submit-btn" type="button" disabled class="btn btn-outline-success"><span
+                class="spinner"><ion-icon name="sparkles-outline"></ion-icon></span> Processing…</button>
+            <div id="status"></div>
           </div>
+
         </div>
       </div>
     </div>
+  </div>
   </div>
   <!-- Main JS -->
   <!-- Bootstrap JS -->
