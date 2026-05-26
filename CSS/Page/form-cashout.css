@@ -42,7 +42,9 @@ hr {
     justify-content: space-between;
     width: 100%;
 }
-
+.formHeader{
+    text-align: center;
+}
 #product-price {
     font-size: 30px;
     margin-top: auto;

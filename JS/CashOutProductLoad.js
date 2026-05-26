@@ -8,8 +8,12 @@ const selectionslotEl = document.getElementById('selectslot');
 const payBlockArea = document.querySelector(".payBlock");
 const PaymentBtnEl = document.getElementById("PaymentBtn");
 const TransactionIDInEl = document.getElementById('TransactionIDIn');
+const cardHeaderEl = document.querySelector(".card-header");
 let paymentClaim = false;
 console.log(DataRequirements);
+
+cardHeaderEl.style.display = "none";
+
 
 PaymentBtnEl.addEventListener('click', () => {
     if (TransactionIDInEl.value.length == 12) {
@@ -41,14 +45,27 @@ class ProductData {
         this.DataArguments.forEach((arg, i) => {
             this.Parsed[arg] = this.DataValues[i].split(',').map(v => v.trim());
         });
+        this.selections = [];
+        this.DataArguments.forEach((arg) => {
+            this.selections[arg] = this.Parsed[arg][0];
+        });
+        this.Data = '';
     }
 
     // Call this after user picks options, pass in their selections
-    selections = { amount: '2', size: '2l' }
-    fillData(selections) {
-        return this.DataArguments.map(arg => `${arg}:${selections[arg]}`).join(';');
-    }
+    fillData() {
+        this.selections = [];
+        document.querySelectorAll(".selectBox").forEach((Sb) => {
+            let string = `${Sb.name}:${Sb.value}`
+            this.selections.push(string);
+            console.log(string);
+        });
 
+    }
+    FormatData() {
+        ;
+        window.localStorage.setItem('Data', this.selections.join(';'));
+    }
     Debug() {
         console.log("DataArguments:", this.DataArguments);
         console.log("DataValues:", this.DataValues);
@@ -58,7 +75,6 @@ class ProductData {
 NewProductData = new ProductData(DataRequirements);
 
 NewProductData.Debug();
-
 ProductDisplay.innerHTML = `<span id="product-name">${window.localStorage.getItem('ProductName')}</span>  <span id="product-price">${window.localStorage.getItem('ProductPrice')}</span>`
 ProductDescription.textContent = window.localStorage.getItem('ProductDescription');
 ProductImgDisplay.src = window.localStorage.getItem('ProductImage');
@@ -99,12 +115,20 @@ async function loadHeaders() {
     }
 }
 
+NewProductData.DataArguments.forEach((da) => {
+    const options = NewProductData.Parsed[da].map(v => `<option value="${v}">${v}</option>`).join('');
+    selectionslotEl.innerHTML += `<label>${da}:</label> <select class="selectBox" name="${da}" id="${da}El">${options}</select>`;
+
+});
+// Set initial _data value based on defaults
+requestData["_data"] = NewProductData.fillData(NewProductData.selections);
+
+
 // ── 2. Build form dynamically from headers ─────────────
 function buildForm(headers) {
 
-    selectionslotEl.innerHTML = "";
     formFields.innerHTML = "";
-
+    cardHeaderEl.style.display = "block";
     headers.forEach((key, i) => {
         // Auto-filled fields: prefixed with "_", skip rendering, assign JS value
         if (key.startsWith("_")) {
@@ -147,15 +171,8 @@ function buildForm(headers) {
         formFields.appendChild(group);
         submitBtn.innerHTML = btnTextContent;
     });
-    NewProductData.DataArguments.forEach((da) => {
-        const options = NewProductData.Parsed[da].map(v => `<option value="${v}">${v}</option>`).join('');
-        selectionslotEl.innerHTML += ` <label>${da}:</label> <select name="${da}" id="${da}El">${options}</select>`;
-    });
+
     payBlockArea.style.display = 'none'
-    const heading = document.createElement("h1");
-    heading.classList.add('card-header');
-    heading.textContent = "Your Shipping Information";
-    formFields.prepend(heading);
 }
 
 // ── 3. Validate ────────────────────────────────────────
@@ -191,6 +208,8 @@ function validate() {
 
 // ── 4. Send data to spreadsheet ────────────────────────
 async function requestDataToTb() {
+    NewProductData.fillData();
+    NewProductData.FormatData();
     headers.filter(key => key.startsWith("_")).forEach(key => {
         const localKey = key.replace("_", "");
         requestData[key] = window.localStorage.getItem(localKey) || "";
